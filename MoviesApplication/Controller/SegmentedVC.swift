@@ -9,7 +9,7 @@
 import UIKit
 private let movies = HomePageVC()
 class SegmentedVC: UIViewController{
-   
+   //Burak
     
     fileprivate let segmentedControl : UISegmentedControl = {
         let sc = UISegmentedControl()

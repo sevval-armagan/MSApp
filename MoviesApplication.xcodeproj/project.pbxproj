@@ -21,6 +21,7 @@
 		161BBCFF241EA56A00E27D74 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 161BBCFE241EA56A00E27D74 /* Assets.xcassets */; };
 		161BBD02241EA56A00E27D74 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 161BBD00241EA56A00E27D74 /* LaunchScreen.storyboard */; };
 		161BBD0D241EA56B00E27D74 /* MoviesApplicationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 161BBD0C241EA56B00E27D74 /* MoviesApplicationTests.swift */; };
+		161BBD18241EA56B00E27D74 /* MoviesApplicationUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 161BBD17241EA56B00E27D74 /* MoviesApplicationUITests.swift */; };
 		161BBD26241EBD5E00E27D74 /* MoviesVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 161BBD25241EBD5E00E27D74 /* MoviesVC.swift */; };
 		161BBD28241EBDEC00E27D74 /* HomePageVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 161BBD27241EBDEC00E27D74 /* HomePageVC.swift */; };
 		161BBD2A241EBE0A00E27D74 /* MyCollectionVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 161BBD29241EBE0A00E27D74 /* MyCollectionVC.swift */; };
