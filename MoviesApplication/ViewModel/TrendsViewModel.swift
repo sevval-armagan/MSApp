@@ -29,7 +29,7 @@ class SeriesViewModel{
 extension TrendsViewModel{
     func getData(){
 
-        var request = URLRequest(url: URL(string: "https://api.themoviedb.org/3/trending/movie/day?api_key=1218591a465b03f80cfebb0ef37a2275")!)
+        var request = URLRequest(url: URL(string: "https://api.themoviedb.org/3/discover/movie?api_key=1218591a465b03f80cfebb0ef37a2275&language=en-US&sort_by=popularity.desc&include_adult=false&include_video=false&page=1")!)
         request.httpMethod = "GET"
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
         let data = try? Data(contentsOf: request.url!)

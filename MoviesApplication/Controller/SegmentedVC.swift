@@ -9,47 +9,47 @@
 import UIKit
 private let movies = HomePageVC()
 class SegmentedVC: UIViewController{
-   //Burak
+    
     
     fileprivate let segmentedControl : UISegmentedControl = {
         let sc = UISegmentedControl()
         sc.insertSegment(withTitle: "Movies", at: 0, animated: false)
         sc.insertSegment(withTitle: "Series", at: 1, animated: false)
-     //   sc.addTarget(self, action: #selector(handleSegmentedChange), for: .valueChanged)
+        //   sc.addTarget(self, action: #selector(handleSegmentedChange), for: .valueChanged)
         return sc
     }()
     func setSegmnetedController(){
         view.addSubview(segmentedControl)
         segmentedControl.selectedSegmentIndex = 0
         segmentedControl.snp.makeConstraints { (make) in
-           make.top.equalTo(view).offset(95)
+            make.top.equalTo(view).offset(95)
             make.leading.equalTo(view).offset(10)
             make.trailing.equalTo(view).offset(-10)
             make.height.equalTo(60)
         }
     }
-  /*  @objc fileprivate func handleSegmentedChange(){
-        print(segmentedControl.selectedSegmentIndex)
-        switch segmentedControl.selectedSegmentIndex {
-        case 0:
-            
-            
-        case 1:
-            
-            
-        default:
-            view.backgroundColor = .yellow
-        }
-    }*/
+    /*  @objc fileprivate func handleSegmentedChange(){
+     print(segmentedControl.selectedSegmentIndex)
+     switch segmentedControl.selectedSegmentIndex {
+     case 0:
+     
+     
+     case 1:
+     
+     
+     default:
+     view.backgroundColor = .yellow
+     }
+     }*/
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
-      setSegmnetedController()
+        
+        setSegmnetedController()
         setScrollView()
-      setContainer()
+        setContainer()
         setupDelegate()
-    setMoviesCollectionView()
+        setMoviesCollectionView()
         
         self.trendsViewModel.getData()
         self.seriesViewModel.getDataSeries()
@@ -75,50 +75,50 @@ class SegmentedVC: UIViewController{
     
     
     fileprivate var currentPage: Int = 0 {
-         didSet{
-             print("")
-         }
-     }
-     fileprivate var pageSize: CGSize{
-         let layout = self.moviewCollectionView.collectionViewLayout as! UPCarouselFlowLayout
-         var pageSize = layout.itemSize
-         if layout.scrollDirection == .horizontal {
-             pageSize.width += layout.minimumLineSpacing
-             
-         } else{
-             pageSize.height += layout.minimumLineSpacing
-         }
-         return pageSize
-     }
+        didSet{
+            print("")
+        }
+    }
+    fileprivate var pageSize: CGSize{
+        let layout = self.moviewCollectionView.collectionViewLayout as! UPCarouselFlowLayout
+        var pageSize = layout.itemSize
+        if layout.scrollDirection == .horizontal {
+            pageSize.width += layout.minimumLineSpacing
+            
+        } else{
+            pageSize.height += layout.minimumLineSpacing
+        }
+        return pageSize
+    }
     
     
     let scrollView = UIScrollView()
-       func setScrollView(){
-           view.addSubview(scrollView)
-           scrollView.snp.makeConstraints { (make) in
+    func setScrollView(){
+        view.addSubview(scrollView)
+        scrollView.snp.makeConstraints { (make) in
             make.top.equalTo(segmentedControl.snp.bottom).offset(10)
-               make.leading.equalTo(view).offset(0)
-               make.trailing.equalTo(view).offset(0)
-               make.bottom.equalTo(view).offset(0)
-           }
-       }
+            make.leading.equalTo(view).offset(0)
+            make.trailing.equalTo(view).offset(0)
+            make.bottom.equalTo(view).offset(0)
+        }
+    }
     let container = UIView()
     func setContainer(){
         scrollView.addSubview(container)
         container.backgroundColor = .black
         container.snp.makeConstraints { (make) in
-         make.top.equalTo(scrollView).offset(10)
+            make.top.equalTo(scrollView).offset(10)
             make.leading.equalTo(view).offset(10)
             make.trailing.equalTo(view).offset(-10)
             make.height.equalTo(view)
         }
     }
     func setupDelegate(){
-           moviewCollectionView.delegate = self
-           moviewCollectionView.dataSource = self
-          
-       }
-       
+        moviewCollectionView.delegate = self
+        moviewCollectionView.dataSource = self
+        
+    }
+    
     fileprivate let moviewCollectionView : UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
@@ -133,6 +133,7 @@ class SegmentedVC: UIViewController{
     func setMoviesCollectionView(){
         container.addSubview(moviewCollectionView)
         moviewCollectionView.backgroundColor = .black
+        moviewCollectionView.layer.cornerRadius = 10.0
         moviewCollectionView.snp.makeConstraints { (make) -> Void in
             make.width.equalTo(container)
             make.top.equalTo(container)
@@ -148,17 +149,17 @@ class SegmentedVC: UIViewController{
     }()
     
     lazy var seriesViewModel: SeriesViewModel = {
-          let seriesVM = SeriesViewModel()
-         // trendsVM.delegate = self
-          return seriesVM
-          
-      }()
+        let seriesVM = SeriesViewModel()
+        // trendsVM.delegate = self
+        return seriesVM
+        
+    }()
 }
 
 extension SegmentedVC: UICollectionViewDelegateFlowLayout, UICollectionViewDataSource{
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-      
-            return 20
+        
+        return 20
         
         
     }
@@ -166,39 +167,38 @@ extension SegmentedVC: UICollectionViewDelegateFlowLayout, UICollectionViewDataS
         if(segmentedControl.selectedSegmentIndex == 0)
         {
             let moviesCell = collectionView.dequeueReusableCell(withReuseIdentifier: "movieCell", for: indexPath) as! MoviesCollectionViewCell
-                moviesCell.backgroundColor = .green
-                let url = URL(string: "https://image.tmdb.org/t/p/original" + trendsViewModel.array[0].results[indexPath.row].poster_path!)
+            let url = URL(string: "https://image.tmdb.org/t/p/original" + trendsViewModel.array[0].results[indexPath.row].poster_path!)
             
-                URLSession.shared.dataTask(with: url!){
-                    (data,response,error) in
-                    if error != nil{
-                        print("error")
-                        return
-                    }
-                    DispatchQueue.main.async {
-                        moviesCell.posterImage.image = UIImage(data : data!)
-                    }
-                }.resume()
-                return moviesCell
+            URLSession.shared.dataTask(with: url!){
+                (data,response,error) in
+                if error != nil{
+                    print("error")
+                    return
+                }
+                DispatchQueue.main.async {
+                    moviesCell.posterImage.image = UIImage(data : data!)
+                }
+            }.resume()
+            return moviesCell
         }
-       
+            
             
         else {
             let moviesCell = collectionView.dequeueReusableCell(withReuseIdentifier: "movieCell", for: indexPath) as! MoviesCollectionViewCell
-                moviesCell.backgroundColor = .green
+            moviesCell.backgroundColor = .black
             let url = URL(string: "https://image.tmdb.org/t/p/original" + seriesViewModel.array1[0].results![indexPath.row].poster_path!)
             
-                URLSession.shared.dataTask(with: url!){
-                    (data,response,error) in
-                    if error != nil{
-                        print("error")
-                        return
-                    }
-                    DispatchQueue.main.async {
-                        moviesCell.posterImage.image = UIImage(data : data!)
-                    }
-                }.resume()
-                return moviesCell
+            URLSession.shared.dataTask(with: url!){
+                (data,response,error) in
+                if error != nil{
+                    print("error")
+                    return
+                }
+                DispatchQueue.main.async {
+                    moviesCell.posterImage.image = UIImage(data : data!)
+                }
+            }.resume()
+            return moviesCell
             
         }
         
@@ -207,18 +207,18 @@ extension SegmentedVC: UICollectionViewDelegateFlowLayout, UICollectionViewDataS
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         
-            return CGSize(width: 280, height: 420)
+        return CGSize(width: 280, height: 420)
         
         
     }
     
     //TODO: Cell'lerin kenarlara olan uzaklıkları
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
-       
-
-            return UIEdgeInsets(top: 3, left: 3, bottom: 3, right: 3)
         
-       
+        
+        return UIEdgeInsets(top: 3, left: 3, bottom: 3, right: 3)
+        
+        
     }
     
 }

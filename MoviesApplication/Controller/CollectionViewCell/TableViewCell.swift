@@ -10,28 +10,30 @@ import UIKit
 
 class TableViewCell: UITableViewCell {
     
-          let posterImage : UIImageView = {
-              let image = UIImageView()
-              image.backgroundColor = UIColor.black
-              return image
-          }()
-          
-          private func  posterImageContraints(){
-              self.contentView.addSubview(posterImage)
-              posterImage.snp.makeConstraints { (make) in
-                  make.centerX.equalToSuperview()
-                  make.centerY.equalToSuperview()
-                  make.height.equalTo(450)
-                  make.width.equalTo(300)
-                  
-              }
-          }
+    
+    
+    let posterImage : UIImageView = {
+        let image = UIImageView()
+        image.backgroundColor = UIColor.black
+        return image
+    }()
+    
+    private func  posterImageContraints(){
+        self.contentView.addSubview(posterImage)
+        posterImage.snp.makeConstraints { (make) in
+            make.centerX.equalToSuperview()
+            make.centerY.equalToSuperview()
+            make.height.equalTo(450)
+            make.width.equalTo(300)
+            
+        }
+    }
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-posterImageContraints()
+        posterImageContraints()
         self.backgroundColor = .black
     }
-
+    
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -48,7 +50,7 @@ posterImageContraints()
             self.posterImage.layer.shouldRasterize = true
         }
     }
-   
-
+    
+    
 }
 

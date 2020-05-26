@@ -29,56 +29,11 @@ class CollectionViewCell: UICollectionViewCell {
         }
     }
     
-  /*  let movieNameLabel = UILabel()
-    func setmovieNameLabel() {
-        self.contentView.addSubview(movieNameLabel)
-        movieNameLabel.snp.makeConstraints { (make) -> Void  in
-            movieNameLabel.text = "Today"
-            movieNameLabel.textColor = .white
-            movieNameLabel.font = movieNameLabel.font.withSize(20)
-            make.height.equalTo(25)
-            make.top.equalTo(posterImage.snp.top).offset(5)
-            make.leading.equalTo(posterImage.snp.leading).offset(5)
-            
-        }
-    }*/
-    
-    let trailer : UIWebView = {
-        let trailer = UIWebView()
-        return trailer
-    }()
-    
-    func setTrailer(){
-        self.contentView.addSubview(trailer)
-        trailer.snp.makeConstraints { (make) in
-            make.centerX.equalToSuperview()
-            make.centerY.equalToSuperview()
-            make.height.equalToSuperview()
-            make.width.equalToSuperview()
-        }
-    }
-    
-    /*   let starImage : UIImageView = {
-     let image = UIImageView()
-     image.backgroundColor = UIColor.black
-     return image
-     }()
-     
-     private func  starImageContraints(){
-     self.contentView.addSubview(starImage)
-     posterImage.snp.makeConstraints { (make) in
-     make.top.equalTo(movieNameLabel.snp.bottom)
-     make.leading.equalTo(posterImage.snp.leading).offset(5)
-     make.height.equalTo(25)
-     
-     }
-     }*/
     
     override init(frame : CGRect){
         super.init(frame : frame)
         posterImageContraints()
-      //  setmovieNameLabel()
-        // starImageContraints()
+      
     }
     
     required init?(coder: NSCoder) {

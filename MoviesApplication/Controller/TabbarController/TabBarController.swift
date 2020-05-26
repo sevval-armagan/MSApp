@@ -13,7 +13,7 @@ class TabBarController: UITabBarController {
     private let homePageVC = HomePageVC()
     private let moviesVC = MoviesVC()
     private let myCollectionVC = MyCollectionVC()
-    private let segmentedVC = SegmentedVC()
+    private let segmentedVC = SegmentedControllerVC()
     
     override func viewDidLoad() {
         super.viewDidLoad()
