@@ -126,18 +126,18 @@ extension SeriesVC: UICollectionViewDelegateFlowLayout, UICollectionViewDataSour
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
         let moviesCell = collectionView.dequeueReusableCell(withReuseIdentifier: "movieCell", for: indexPath) as! MoviesCollectionViewCell
-        let url = URL(string: "https://image.tmdb.org/t/p/original" + seriesViewModel.array1[0].results![indexPath.row].poster_path!)
-        
-        URLSession.shared.dataTask(with: url!){
-            (data,response,error) in
-            if error != nil{
-                print("error")
-                return
-            }
-            DispatchQueue.main.async {
-                moviesCell.posterImage.image = UIImage(data : data!)
-            }
-        }.resume()
+//        let url = URL(string: "https://image.tmdb.org/t/p/original" + seriesViewModel.array1[0].results![indexPath.row].poster_path!)
+//
+//        URLSession.shared.dataTask(with: url!){
+//            (data,response,error) in
+//            if error != nil{
+//                print("error")
+//                return
+//            }
+//            DispatchQueue.main.async {
+//                moviesCell.posterImage.image = UIImage(data : data!)
+//            }
+//        }.resume()
         return moviesCell
     }
     

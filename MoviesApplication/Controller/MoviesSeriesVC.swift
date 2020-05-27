@@ -9,7 +9,9 @@
 import UIKit
 import SnapKit
 
-class HomePageVC: UIViewController {
+class MoviesSeriesVC: UIViewController {
+   
+    
     
     lazy var trendsViewModel: TrendsViewModel = {
         let trendsVM = TrendsViewModel()
@@ -17,6 +19,14 @@ class HomePageVC: UIViewController {
         return trendsVM
         
     }()
+    
+    lazy var trailersViewModel: TrailersViewModel = {
+        let trailersVM = TrailersViewModel()
+        trailersVM.delegate = self
+        return trailersVM
+    }()
+    
+    let moviesDetails = MovieDetailsVC()
     
     let scrollView = UIScrollView()
     func setScrollView(){
@@ -60,8 +70,6 @@ class HomePageVC: UIViewController {
     
     
     let trendsLabel = UILabel()
-    
-    
     func setTrendsLabel() {
         container.addSubview(trendsLabel)
         trendsLabel.snp.makeConstraints { (make) -> Void  in
@@ -139,11 +147,16 @@ class HomePageVC: UIViewController {
         return pageSize
     }
     
+    
+    //Movie Details Sayfası değişkenleri
+     var posterPath = String()
 }
 
 //moviesCollecitonView viewmodel deki protocol sınıfa uyarlanması yani parse işlemi tamamlandığında reload yap.
-extension HomePageVC: TrendsViewModelDelegate{
-    
+extension MoviesSeriesVC: TrendsViewModelDelegate, TrailersViewModelDelegate{
+    func trailersRequestCompleted() {
+           
+       }
     
     func requestCompleted() {
         DispatchQueue.main.async {
@@ -154,7 +167,7 @@ extension HomePageVC: TrendsViewModelDelegate{
 }
 
 //Collection View Extensions
-extension HomePageVC: UICollectionViewDelegateFlowLayout, UICollectionViewDataSource{
+extension MoviesSeriesVC: UICollectionViewDelegateFlowLayout, UICollectionViewDataSource{
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         
         return trendsViewModel.array[0].results.count
@@ -164,22 +177,25 @@ extension HomePageVC: UICollectionViewDelegateFlowLayout, UICollectionViewDataSo
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
         let moviesCell = collectionView.dequeueReusableCell(withReuseIdentifier: "movieCell", for: indexPath) as! MoviesCollectionViewCell
-        let url = URL(string: "https://image.tmdb.org/t/p/original" + trendsViewModel.array[0].results[indexPath.row].poster_path!)
-        URLSession.shared.dataTask(with: url!){
-            (data,response,error) in
-            if error != nil{
-                print("error")
-                return
-            }
-            DispatchQueue.main.async {
-                moviesCell.posterImage.image = UIImage(data : data!)
-            }
-        }.resume()
+        
+        moviesCell.posterImage.loadImageAsync(with: "https://image.tmdb.org/t/p/original" + trendsViewModel.array[0].results[indexPath.row].poster_path!, completed: {})
         return moviesCell
         
     }
-    
-    
+
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+          print("movies details sayfasına gitmeli")
+              self.present(moviesDetails, animated: true, completion: nil)
+              moviesDetails.loadImage(posterPath: trendsViewModel.array[0].results[indexPath.row].poster_path!)
+      
+        guard let trailer = trendsViewModel.array[0].results[indexPath.row].id else{return}
+               self.trailersViewModel.getData(id: String(trailer))
+        moviesDetails.movies.append(contentsOf: trailersViewModel.trailersArray[0].results![0].key!)
+        moviesDetails.movieNameLabel.text = trendsViewModel.array[0].results[indexPath.row].title
+        moviesDetails.dateLabel.text = trendsViewModel.array[0].results[indexPath.row].release_date
+    }
+   
+   
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         
         return CGSize(width: 280, height: 420)

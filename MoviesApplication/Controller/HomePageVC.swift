@@ -13,7 +13,7 @@ import AVFoundation
 import WebKit
 import XCDYouTubeKit
 // TODO: Açıklma(English)
-class MoviesVC: UIViewController, WKUIDelegate, WKNavigationDelegate{
+class HomePageVC: UIViewController, WKUIDelegate, WKNavigationDelegate{
     
     
     let container = UIView()
@@ -58,8 +58,8 @@ class MoviesVC: UIViewController, WKUIDelegate, WKNavigationDelegate{
         }
     }
     
-  
-
+    
+    
     fileprivate let collectionView : UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .vertical
@@ -86,21 +86,21 @@ class MoviesVC: UIViewController, WKUIDelegate, WKNavigationDelegate{
         collectionView.dataSource = self
     }
     
-
+    
     func playVideo(key :String) {
-
-          let playerViewController = AVPlayerViewController()
-          self.present(playerViewController, animated: true, completion: nil)
-
-          XCDYouTubeClient.default().getVideoWithIdentifier(key) { (video: XCDYouTubeVideo?, error: Error?) in
-              if let streamURL = video?.streamURLs[XCDYouTubeVideoQuality.HD720.rawValue] {
-                  playerViewController.player = AVPlayer(url: streamURL)
-              } else {
-                  self.dismiss(animated: true, completion: nil)
-              }
-          }
-      }
-
+        
+        let playerViewController = AVPlayerViewController()
+        self.present(playerViewController, animated: true, completion: nil)
+        
+        XCDYouTubeClient.default().getVideoWithIdentifier(key) { (video: XCDYouTubeVideo?, error: Error?) in
+            if let streamURL = video?.streamURLs[XCDYouTubeVideoQuality.HD720.rawValue] {
+                playerViewController.player = AVPlayer(url: streamURL)
+            } else {
+                self.dismiss(animated: true, completion: nil)
+            }
+        }
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setContainer()
@@ -111,9 +111,9 @@ class MoviesVC: UIViewController, WKUIDelegate, WKNavigationDelegate{
         setupDelegate()
         self.homePageViewModel.getData()
         self.trailersViewModel.getData(id: String(id))
-     
-    
-     
+        
+        
+        
         
         let flowLayout = UPCarouselFlowLayout()
         flowLayout.itemSize = CGSize(width: UIScreen.main.bounds.size.width - 60.0, height: collectionView.frame.size.height)
@@ -166,7 +166,9 @@ class MoviesVC: UIViewController, WKUIDelegate, WKNavigationDelegate{
 }
 
 var id = Int()
-extension MoviesVC: HomePageViewModelDelegate, TrailersViewModelDelegate{
+
+
+extension HomePageVC: HomePageViewModelDelegate, TrailersViewModelDelegate{
     func homePagerequestCompleted() {
         DispatchQueue.main.async {
             
@@ -181,29 +183,14 @@ extension MoviesVC: HomePageViewModelDelegate, TrailersViewModelDelegate{
 
 
 
-extension MoviesVC : UICollectionViewDelegate, UICollectionViewDataSource,UICollectionViewDelegateFlowLayout{
+extension HomePageVC : UICollectionViewDelegate, UICollectionViewDataSource,UICollectionViewDelegateFlowLayout{
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return 20
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as! CollectionViewCell
-        
-        let a = homePageViewModel.homePageArray[0].results![indexPath.row].poster_path!
-        let url = URL(string: "https://image.tmdb.org/t/p/original" + a)
-        URLSession.shared.dataTask(with: url!){
-            (data,response, error) in
-            if error != nil {
-                print("error1")
-                return
-            }
-            
-            id = self.homePageViewModel.homePageArray[0].results![indexPath.row].id!
-            DispatchQueue.main.async {
-                cell.posterImage.image = UIImage(data: data!)
-            }
-        }.resume()
-        
+        cell.posterImage.loadImageAsync(with: "https://image.tmdb.org/t/p/original" + homePageViewModel.homePageArray[0].results![indexPath.row].poster_path!, completed: {})
         return cell
     }
     
@@ -211,31 +198,25 @@ extension MoviesVC : UICollectionViewDelegate, UICollectionViewDataSource,UIColl
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         
-        guard let burak23 = homePageViewModel.homePageArray[0].results![indexPath.row].id else{return}
-        self.trailersViewModel.getData(id: String(burak23))
+        guard let trailer = homePageViewModel.homePageArray[0].results![indexPath.row].id else{return}
+        self.trailersViewModel.getData(id: String(trailer))
         // tıklandığında yapılacaklar
         
-        //   collectionView.deselectItem(at: indexPath, animated: true)
-        guard let sevval = try? trailersViewModel.trailersArray[0].results!.count else{return}
-        if(sevval == 0){
+        collectionView.deselectItem(at: indexPath, animated: true)
+        guard let trailerControl = try? trailersViewModel.trailersArray[0].results!.count else{return}
+        if(trailerControl == 0){
             print("boş")
             trailersViewModel.trailersArray.removeAll()
         }
         else{
             
-            guard  let aaaa = trailersViewModel.trailersArray[0].results![0].key else {return}
-    
-            playVideo(key: aaaa)
-            
+            guard  let trailerKey = trailersViewModel.trailersArray[0].results![0].key else {return}
+            playVideo(key: trailerKey)
             trailersViewModel.trailersArray.removeAll()
         }
-        print("sevval asdfdf")
-        
-        
     }
-   
+    
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        
         return CGSize(width: 300, height: 450)
     }
     

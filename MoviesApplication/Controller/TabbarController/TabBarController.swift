@@ -10,8 +10,8 @@ import UIKit
 
 class TabBarController: UITabBarController {
     
-    private let homePageVC = HomePageVC()
-    private let moviesVC = MoviesVC()
+    private let homePageVC = MoviesSeriesVC()
+    private let moviesVC = HomePageVC()
     private let myCollectionVC = MyCollectionVC()
     private let segmentedVC = SegmentedControllerVC()
     

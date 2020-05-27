@@ -52,8 +52,8 @@ class SegmentedControllerVC: UIViewController {
     }
     
     
-    lazy var moviesVC: HomePageVC = {
-        let vc = HomePageVC()
+    lazy var moviesVC: MoviesSeriesVC = {
+        let vc = MoviesSeriesVC()
         self.addAsChildVC(childVC: vc)
         return vc
     }()

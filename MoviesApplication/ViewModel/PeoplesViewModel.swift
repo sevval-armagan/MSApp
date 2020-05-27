@@ -28,10 +28,11 @@ extension PeoplesViewModel{
                 let decoder = JSONDecoder()
                 let gitData = try decoder.decode(PeoplesModel.self, from: data)
                 self.array.append(gitData)
-                self.delegate?.requestCompleted2()
+               
             } catch let err {
                 print("Err", err)
             }
+             self.delegate?.requestCompleted2()
         }.resume()
         
         
