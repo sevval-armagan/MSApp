@@ -87,19 +87,6 @@ class HomePageVC: UIViewController, WKUIDelegate, WKNavigationDelegate{
     }
     
     
-    func playVideo(key :String) {
-        
-        let playerViewController = AVPlayerViewController()
-        self.present(playerViewController, animated: true, completion: nil)
-        
-        XCDYouTubeClient.default().getVideoWithIdentifier(key) { (video: XCDYouTubeVideo?, error: Error?) in
-            if let streamURL = video?.streamURLs[XCDYouTubeVideoQuality.HD720.rawValue] {
-                playerViewController.player = AVPlayer(url: streamURL)
-            } else {
-                self.dismiss(animated: true, completion: nil)
-            }
-        }
-    }
     
     override func viewDidLoad() {
         super.viewDidLoad()

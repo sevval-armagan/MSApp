@@ -14,21 +14,36 @@ protocol TrendsViewModelDelegate{
     func requestCompleted()
 }
 
+protocol MovieDetailsViewModelDelegate{
+    func requestCompleted76()
+}
+protocol MoviesCastViewModelDelegate{
+    func requestCompleted()
+}
+//-----------------------------------------//
 class TrendsViewModel{
     var array = [TrendsModel]()
     var delegate: TrendsViewModelDelegate?
 }
 
 class SeriesViewModel{
-    var array1 = [SeriesModel]()
+    var seriesArray = [SeriesModel]()
     var delegate: TrendsViewModelDelegate?
 }
 
+class MovieDetailsViewModel{
+    var moviesDetailsArray = [MovieDetailsModel]()
+    var delegate: MovieDetailsViewModelDelegate?
+}
+class MoviesCastViewModel{
+    var moviesCastArray = [MoviesCastModel]()
+    var delegate: MoviesCastViewModelDelegate?
+}
 
 
 extension TrendsViewModel{
     func getData(){
-
+        
         var request = URLRequest(url: URL(string: "https://api.themoviedb.org/3/discover/movie?api_key=1218591a465b03f80cfebb0ef37a2275&language=en-US&sort_by=popularity.desc&include_adult=false&include_video=false&page=1")!)
         request.httpMethod = "GET"
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
@@ -39,32 +54,75 @@ extension TrendsViewModel{
             array.append(json!)
         }
         self.delegate?.requestCompleted()
- 
-       
+        
+        
         
     }
+}
+
+
+extension MovieDetailsViewModel{
+    
+    func getDataMovieDetails( id: String,completed: @escaping () -> ()) {
+        
+        
+        var request = URLRequest(url: URL(string: "https://api.themoviedb.org/3/movie/" + id + "?api_key=1218591a465b03f80cfebb0ef37a2275&language=en-US")!)
+        request.httpMethod = "GET"
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        guard let data = try? Data(contentsOf: request.url!)else {return}
+        
+        do {
+            guard let json = try? JSONDecoder().decode(MovieDetailsModel.self, from: data) else{return}
+            moviesDetailsArray.append(json)
+         
+        }
+      
+        completed()
+           self.delegate?.requestCompleted76()
+        
     }
+}
+
 
 extension SeriesViewModel{
     func getDataSeries(){
-           
-           var request = URLRequest(url: URL(string: "https://api.themoviedb.org/3/discover/tv?api_key=1218591a465b03f80cfebb0ef37a2275&language=en-US&sort_by=popularity.desc&page=1&include_null_first_air_dates=false")!)
-                         request.httpMethod = "GET"
-                         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-                  guard let data = try? Data(contentsOf: request.url!)else {return}
-                         
-                         do {
-                          guard let json = try? JSONDecoder().decode(SeriesModel.self, from: data) else{return}
-                              array1.append(json)
-                         }
-                         catch{
-                          print("Error JsonDecode")
-                  }
-                  
-              }
+        
+        var request = URLRequest(url: URL(string: "https://api.themoviedb.org/3/discover/tv?api_key=1218591a465b03f80cfebb0ef37a2275&language=en-US&sort_by=popularity.desc&page=1&include_null_first_air_dates=false")!)
+        request.httpMethod = "GET"
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        guard let data = try? Data(contentsOf: request.url!)else {return}
+        
+        do {
+            guard let json = try? JSONDecoder().decode(SeriesModel.self, from: data) else{return}
+            seriesArray.append(json)
+        }
+     
+        self.delegate?.requestCompleted()
+        
+    }
 }
+
+extension MoviesCastViewModel{
     
-   
+    func getMoviesCast( id: String,completed: @escaping () -> ()) {
+        
+        
+        var request = URLRequest(url: URL(string: "https://api.themoviedb.org/3/movie/" + id + "/credits?api_key=1218591a465b03f80cfebb0ef37a2275")!)
+        request.httpMethod = "GET"
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        guard let data = try? Data(contentsOf: request.url!)else {return}
+        
+        do {
+            guard let json = try? JSONDecoder().decode(MoviesCastModel.self, from: data) else{return}
+            moviesCastArray.append(json)
+        }
+      
+        completed()
+        self.delegate?.requestCompleted()
+        
+    }
+}
+
 
 
 

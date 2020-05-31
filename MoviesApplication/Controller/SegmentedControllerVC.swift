@@ -36,7 +36,7 @@ class SegmentedControllerVC: UIViewController {
         view.addSubview(container)
         container.translatesAutoresizingMaskIntoConstraints = false
         container.snp.makeConstraints { (make) in
-            make.top.equalTo(segmentedControl.snp.bottom).offset(10)
+            make.top.equalTo(segmentedControl)
             make.leading.equalTo(view)
             make.trailing.equalTo(view)
             make.height.equalTo(view)
@@ -47,7 +47,7 @@ class SegmentedControllerVC: UIViewController {
     func addAsChildVC(childVC : UIViewController){
         addChild(childVC)
         container.addSubview(childVC.view)
-       // childVC.view.frame = container.frame
+        childVC.view.frame = container.frame
         childVC.didMove(toParent: self)
     }
     
@@ -69,12 +69,10 @@ class SegmentedControllerVC: UIViewController {
     @objc func madeSelection(){
         switch segmentedControl.selectedSegmentIndex {
         case 0:
-            print("movies")
             moviesVC.view.isHidden = false
             seriesVC.view.isHidden = true
             
         case 1:
-            print("series")
             seriesVC.view.isHidden = false
             moviesVC.view.isHidden = true
             

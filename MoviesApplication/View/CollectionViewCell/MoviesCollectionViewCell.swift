@@ -47,8 +47,7 @@ class MoviesCollectionViewCell: UICollectionViewCell {
             self.posterImage.layer.shadowOpacity = 10.0
             self.posterImage.layer.shadowOffset = .zero
             self.posterImage.layer.shadowPath = UIBezierPath(rect: self.posterImage.bounds).cgPath
-            self.posterImage.layer.shouldRasterize = true
-            
+            self.posterImage.layer.shouldRasterize = true            
         }
         
     }

@@ -9,14 +9,25 @@
 import UIKit
 import SnapKit
 
-class MoviesSeriesVC: UIViewController {
-   
+class MoviesSeriesVC: UIViewController, MovieDetailsViewModelDelegate {
+    func requestCompleted76() {
+        
+    }
+    
+    
     
     
     lazy var trendsViewModel: TrendsViewModel = {
         let trendsVM = TrendsViewModel()
         trendsVM.delegate = self
         return trendsVM
+        
+    }()
+
+    lazy var moviesDetailsViewModel: MovieDetailsViewModel = {
+        let moviesDetailsVM = MovieDetailsViewModel()
+        moviesDetailsVM.delegate = self
+        return moviesDetailsVM
         
     }()
     
@@ -110,53 +121,49 @@ class MoviesSeriesVC: UIViewController {
         
         
         
-        let flowLayout = UPCarouselFlowLayout()
-        flowLayout.itemSize = CGSize(width: UIScreen.main.bounds.size.width - 60.0, height: moviewCollectionView.frame.size.height)
-        flowLayout.scrollDirection = .horizontal
-        flowLayout.sideItemScale = 0.8
-        flowLayout.sideItemAlpha = 1.0
-        flowLayout.spacingMode = .fixed(spacing: 5.0)
-        //              moviewCollectionView.collectionViewLayout = flowLayout
-        
-        
-        func scrollViewDidEndDecelerating(_ scrollView: UIScrollView){
-            let layout = self.moviewCollectionView.collectionViewLayout as! UPCarouselFlowLayout
-            let pageSide = (layout.scrollDirection == .horizontal) ? self.pageSize.width : self.pageSize.height
-            let offset = (layout.scrollDirection == .horizontal) ? scrollView.contentOffset.x : scrollView.contentOffset.y
-            currentPage = Int(floor(offset - pageSide / 2) / pageSide + 1)
-        }
+let flowLayout = UPCarouselFlowLayout()
+flowLayout.itemSize = CGSize(width: UIScreen.main.bounds.size.width - 60.0, height: moviewCollectionView.frame.size.height)
+flowLayout.scrollDirection = .horizontal
+flowLayout.sideItemScale = 0.8
+flowLayout.sideItemAlpha = 1.0
+flowLayout.spacingMode = .fixed(spacing: 5.0)
+moviewCollectionView.collectionViewLayout = flowLayout
+
+
+func scrollViewDidEndDecelerating(_ scrollView: UIScrollView){
+    let layout = self.moviewCollectionView.collectionViewLayout as! UPCarouselFlowLayout
+    let pageSide = (layout.scrollDirection == .horizontal) ? self.pageSize.width : self.pageSize.height
+    let offset = (layout.scrollDirection == .horizontal) ? scrollView.contentOffset.x : scrollView.contentOffset.y
+    currentPage = Int(floor(offset - pageSide / 2) / pageSide + 1)
+}
         
         
     }
     
     
-    fileprivate var currentPage: Int = 0 {
-        didSet{
-            print("")
-        }
+fileprivate var currentPage: Int = 0 {
+    didSet{
+        print("")
     }
-    fileprivate var pageSize: CGSize{
-        let layout = self.moviewCollectionView.collectionViewLayout as! UPCarouselFlowLayout
-        var pageSize = layout.itemSize
-        if layout.scrollDirection == .horizontal {
-            pageSize.width += layout.minimumLineSpacing
-            
-        } else{
-            pageSize.height += layout.minimumLineSpacing
-        }
-        return pageSize
+}
+fileprivate var pageSize: CGSize{
+    let layout = self.moviewCollectionView.collectionViewLayout as! UPCarouselFlowLayout
+    var pageSize = layout.itemSize
+    if layout.scrollDirection == .horizontal {
+        pageSize.width += layout.minimumLineSpacing
+        
+    } else{
+        pageSize.height += layout.minimumLineSpacing
     }
-    
-    
-    //Movie Details Sayfası değişkenleri
-     var posterPath = String()
+    return pageSize
+}
 }
 
 //moviesCollecitonView viewmodel deki protocol sınıfa uyarlanması yani parse işlemi tamamlandığında reload yap.
 extension MoviesSeriesVC: TrendsViewModelDelegate, TrailersViewModelDelegate{
     func trailersRequestCompleted() {
-           
-       }
+        
+    }
     
     func requestCompleted() {
         DispatchQueue.main.async {
@@ -177,42 +184,26 @@ extension MoviesSeriesVC: UICollectionViewDelegateFlowLayout, UICollectionViewDa
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
         let moviesCell = collectionView.dequeueReusableCell(withReuseIdentifier: "movieCell", for: indexPath) as! MoviesCollectionViewCell
-        
+        moviesCell.posterImage.backgroundColor = UIColor(red: 0.149, green: 0.157, blue: 0.184, alpha: 1)
         moviesCell.posterImage.loadImageAsync(with: "https://image.tmdb.org/t/p/original" + trendsViewModel.array[0].results[indexPath.row].poster_path!, completed: {})
         return moviesCell
         
     }
-
+    
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-          print("movies details sayfasına gitmeli")
-              self.present(moviesDetails, animated: true, completion: nil)
-              moviesDetails.loadImage(posterPath: trendsViewModel.array[0].results[indexPath.row].poster_path!)
-      
-        guard let trailer = trendsViewModel.array[0].results[indexPath.row].id else{return}
-               self.trailersViewModel.getData(id: String(trailer))
-        moviesDetails.movies.append(contentsOf: trailersViewModel.trailersArray[0].results![0].key!)
-        moviesDetails.movieNameLabel.text = trendsViewModel.array[0].results[indexPath.row].title
-        moviesDetails.dateLabel.text = trendsViewModel.array[0].results[indexPath.row].release_date
+        moviesDetails.movieID = String(trendsViewModel.array[0].results[indexPath.row].id)
+        self.present(moviesDetails, animated: true, completion: nil)
+        
     }
-   
-   
+    
+    
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        
         return CGSize(width: 280, height: 420)
-        
-        
-        
     }
     
     //TODO: Cell'lerin kenarlara olan uzaklıkları
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
-        
-        
         return UIEdgeInsets(top: 3, left: 3, bottom: 3, right: 3)
-        
-        
     }
     
 }
-
-
