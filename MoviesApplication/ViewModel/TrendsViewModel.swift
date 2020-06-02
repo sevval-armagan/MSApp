@@ -174,7 +174,7 @@ extension SeriesCastViewModel{
     func getMoviesCast( id: String,completed: @escaping () -> ()) {
         
         
-        var request = URLRequest(url: URL(string: "https://api.themoviedb.org/3/tv/" "/credits?api_key=1218591a465b03f80cfebb0ef37a2275&language=en-US")!)
+        var request = URLRequest(url: URL(string: "https://api.themoviedb.org/3/tv/" + id + "/credits?api_key=1218591a465b03f80cfebb0ef37a2275&language=en-US")!)
         request.httpMethod = "GET"
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
         guard let data = try? Data(contentsOf: request.url!)else {return}
