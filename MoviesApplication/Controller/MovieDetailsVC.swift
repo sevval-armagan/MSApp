@@ -18,8 +18,8 @@ class MovieDetailsVC: UIViewController{
     var trailerKey = String()
     private var moviesDetailsViewModel = MovieDetailsViewModel()
     private var MDM = [MovieDetailsModel]()
-    private var trendsViewModel = TrendsViewModel()
-    private var TVM = [TrendsModel]()
+   // private var trendsViewModel = TrendsViewModel()
+   // private var TVM = [TrendsModel]()
     private var trailersViewModel = TrailersViewModel()
     private var TRM = [TrailersModel]()
     private var moviesCastViewModel = MoviesCastViewModel()
@@ -531,6 +531,7 @@ class MovieDetailsVC: UIViewController{
         trailersViewModel.trailersArray.removeAll()
         moviesCastViewModel.moviesCastArray.removeAll()
         castStackView.removeAllSubviews()
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -540,7 +541,7 @@ class MovieDetailsVC: UIViewController{
         moviesCastViewModel.getMoviesCast(id: movieID, completed: {})
         trailersViewModel.getData(id: movieID)
         MDM = moviesDetailsViewModel.moviesDetailsArray
-        TVM = trendsViewModel.array
+      //  TVM = trendsViewModel.array
         TRM = trailersViewModel.trailersArray
         MCM = moviesCastViewModel.moviesCastArray
         

@@ -23,7 +23,7 @@ class MoviesSeriesVC: UIViewController, MovieDetailsViewModelDelegate {
         return trendsVM
         
     }()
-
+    
     lazy var moviesDetailsViewModel: MovieDetailsViewModel = {
         let moviesDetailsVM = MovieDetailsViewModel()
         moviesDetailsVM.delegate = self
@@ -47,6 +47,7 @@ class MoviesSeriesVC: UIViewController, MovieDetailsViewModelDelegate {
             make.leading.equalTo(view).offset(0)
             make.trailing.equalTo(view).offset(0)
             make.bottom.equalTo(view).offset(0)
+            
         }
     }
     
@@ -54,7 +55,7 @@ class MoviesSeriesVC: UIViewController, MovieDetailsViewModelDelegate {
     func setContainer(){
         scrollView.addSubview(container)
         container.snp.makeConstraints { (make) in
-            make.top.equalTo(scrollView.snp.top)
+            make.top.equalTo(scrollView)
             make.left.equalTo(scrollView)
             make.width.equalTo(scrollView)
             make.height.equalTo(1300)
@@ -85,10 +86,10 @@ class MoviesSeriesVC: UIViewController, MovieDetailsViewModelDelegate {
         container.addSubview(trendsLabel)
         trendsLabel.snp.makeConstraints { (make) -> Void  in
             trendsLabel.text = "Trends"
-            trendsLabel.font = trendsLabel.font.withSize(20)
+            trendsLabel.font = UIFont.boldSystemFont(ofSize: 25)
             trendsLabel.textColor = .white
             make.height.equalTo(45)
-            make.top.equalTo(container).offset(10)
+            make.top.equalTo(container)
             make.leading.equalTo(container).offset(10)
             make.trailing.equalTo(container).offset(-10)
         }
@@ -97,8 +98,8 @@ class MoviesSeriesVC: UIViewController, MovieDetailsViewModelDelegate {
     func setMoviesCollectionView(){
         container.addSubview(moviewCollectionView)
         moviewCollectionView.backgroundColor = .black
+        moviewCollectionView.layer.cornerRadius = 10.0
         moviewCollectionView.snp.makeConstraints { (make) -> Void in
-            moviewCollectionView.layer.cornerRadius = 10.0
             make.width.equalTo(container)
             make.top.equalTo(trendsLabel.snp.bottom)
             make.height.equalTo(430)
@@ -117,46 +118,46 @@ class MoviesSeriesVC: UIViewController, MovieDetailsViewModelDelegate {
         
         self.trendsViewModel.getData()
         
+       
+        
+        
+        let flowLayout = UPCarouselFlowLayout()
+        flowLayout.itemSize = CGSize(width: UIScreen.main.bounds.size.width - 60.0, height: moviewCollectionView.frame.size.height)
+        flowLayout.scrollDirection = .horizontal
+        flowLayout.sideItemScale = 0.8
+        flowLayout.sideItemAlpha = 1.0
+        flowLayout.spacingMode = .fixed(spacing: 5.0)
+        moviewCollectionView.collectionViewLayout = flowLayout
         
         
         
-        
-let flowLayout = UPCarouselFlowLayout()
-flowLayout.itemSize = CGSize(width: UIScreen.main.bounds.size.width - 60.0, height: moviewCollectionView.frame.size.height)
-flowLayout.scrollDirection = .horizontal
-flowLayout.sideItemScale = 0.8
-flowLayout.sideItemAlpha = 1.0
-flowLayout.spacingMode = .fixed(spacing: 5.0)
-moviewCollectionView.collectionViewLayout = flowLayout
-
-
-func scrollViewDidEndDecelerating(_ scrollView: UIScrollView){
-    let layout = self.moviewCollectionView.collectionViewLayout as! UPCarouselFlowLayout
-    let pageSide = (layout.scrollDirection == .horizontal) ? self.pageSize.width : self.pageSize.height
-    let offset = (layout.scrollDirection == .horizontal) ? scrollView.contentOffset.x : scrollView.contentOffset.y
-    currentPage = Int(floor(offset - pageSide / 2) / pageSide + 1)
-}
+        func scrollViewDidEndDecelerating(_ scrollView: UIScrollView){
+            let layout = self.moviewCollectionView.collectionViewLayout as! UPCarouselFlowLayout
+            let pageSide = (layout.scrollDirection == .horizontal) ? self.pageSize.width : self.pageSize.height
+            let offset = (layout.scrollDirection == .horizontal) ? scrollView.contentOffset.x : scrollView.contentOffset.y
+            currentPage = Int(floor(offset - pageSide / 2) / pageSide + 1)
+        }
         
         
     }
     
     
-fileprivate var currentPage: Int = 0 {
-    didSet{
-        print("")
+    fileprivate var currentPage: Int = 0 {
+        didSet{
+            print("")
+        }
     }
-}
-fileprivate var pageSize: CGSize{
-    let layout = self.moviewCollectionView.collectionViewLayout as! UPCarouselFlowLayout
-    var pageSize = layout.itemSize
-    if layout.scrollDirection == .horizontal {
-        pageSize.width += layout.minimumLineSpacing
-        
-    } else{
-        pageSize.height += layout.minimumLineSpacing
+    fileprivate var pageSize: CGSize{
+        let layout = self.moviewCollectionView.collectionViewLayout as! UPCarouselFlowLayout
+        var pageSize = layout.itemSize
+        if layout.scrollDirection == .horizontal {
+            pageSize.width += layout.minimumLineSpacing
+            
+        } else{
+            pageSize.height += layout.minimumLineSpacing
+        }
+        return pageSize
     }
-    return pageSize
-}
 }
 
 //moviesCollecitonView viewmodel deki protocol sınıfa uyarlanması yani parse işlemi tamamlandığında reload yap.

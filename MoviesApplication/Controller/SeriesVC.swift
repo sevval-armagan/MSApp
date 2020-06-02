@@ -8,14 +8,33 @@
 
 import UIKit
 
-class SeriesVC: UIViewController {
+class SeriesVC: UIViewController, MovieDetailsViewModelDelegate {
+    func requestCompleted76() {
+        
+    }
+    
     
     lazy var seriesViewModel: SeriesViewModel = {
         let seriesVM = SeriesViewModel()
-        // trendsVM.delegate = self
+        seriesVM.delegate = self
         return seriesVM
         
     }()
+    
+    lazy var moviesDetailsViewModel: MovieDetailsViewModel = {
+           let moviesDetailsVM = MovieDetailsViewModel()
+           moviesDetailsVM.delegate = self
+           return moviesDetailsVM
+           
+       }()
+       
+       lazy var trailersViewModel: TrailersViewModel = {
+           let trailersVM = TrailersViewModel()
+           trailersVM.delegate = self
+           return trailersVM
+       }()
+       
+    let seriesDetails = SeriesDetailsVC()
     
     let scrollView = UIScrollView()
     func setScrollView(){
@@ -32,7 +51,7 @@ class SeriesVC: UIViewController {
     func setContainer(){
         scrollView.addSubview(container)
         container.snp.makeConstraints { (make) in
-            make.top.equalTo(scrollView.snp.top)
+            make.top.equalTo(scrollView)
             make.left.equalTo(scrollView)
             make.width.equalTo(scrollView)
             make.height.equalTo(1300)
@@ -57,13 +76,31 @@ class SeriesVC: UIViewController {
            
        }
     
+    
+    
+    let trendsLabel = UILabel()
+    func setTrendsLabel() {
+        container.addSubview(trendsLabel)
+        trendsLabel.snp.makeConstraints { (make) -> Void  in
+            trendsLabel.text = "Trends"
+            trendsLabel.font = UIFont.boldSystemFont(ofSize: 25)
+            trendsLabel.textColor = .white
+            make.height.equalTo(45)
+            make.top.equalTo(container)
+            make.leading.equalTo(container).offset(10)
+            make.trailing.equalTo(container).offset(-10)
+        }
+    }
+
+    
+    
     func setSeriesCollectionView(){
         container.addSubview(seriesCollectionView)
         seriesCollectionView.backgroundColor = .black
         seriesCollectionView.layer.cornerRadius = 10.0
         seriesCollectionView.snp.makeConstraints { (make) -> Void in
             make.width.equalTo(container)
-            make.top.equalTo(container).offset(10)
+            make.top.equalTo(trendsLabel.snp.bottom)
             make.height.equalTo(430)
         }
     }
@@ -73,6 +110,7 @@ class SeriesVC: UIViewController {
         setScrollView()
         setContainer()
         setupDelegate()
+        setTrendsLabel()
         setSeriesCollectionView()
         
         self.seriesViewModel.getDataSeries()
@@ -84,7 +122,7 @@ class SeriesVC: UIViewController {
               flowLayout.sideItemScale = 0.8
               flowLayout.sideItemAlpha = 1.0
               flowLayout.spacingMode = .fixed(spacing: 5.0)
-              //              moviewCollectionView.collectionViewLayout = flowLayout
+              seriesCollectionView.collectionViewLayout = flowLayout
               
               
               func scrollViewDidEndDecelerating(_ scrollView: UIScrollView){
@@ -116,30 +154,45 @@ class SeriesVC: UIViewController {
     
 }
 
+extension SeriesVC: TrendsViewModelDelegate, TrailersViewModelDelegate{
+    func trailersRequestCompleted() {
+        
+    }
+    
+    func requestCompleted() {
+        DispatchQueue.main.async {
+            self.seriesCollectionView.reloadData()
+        }
+    }
+    
+}
+
 extension SeriesVC: UICollectionViewDelegateFlowLayout, UICollectionViewDataSource{
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         
-        return 20
+        return seriesViewModel.seriesArray[0].results!.count
         
         
     }
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
-        let moviesCell = collectionView.dequeueReusableCell(withReuseIdentifier: "movieCell", for: indexPath) as! MoviesCollectionViewCell
-//        let url = URL(string: "https://image.tmdb.org/t/p/original" + seriesViewModel.array1[0].results![indexPath.row].poster_path!)
-//
-//        URLSession.shared.dataTask(with: url!){
-//            (data,response,error) in
-//            if error != nil{
-//                print("error")
-//                return
-//            }
-//            DispatchQueue.main.async {
-//                moviesCell.posterImage.image = UIImage(data : data!)
-//            }
-//        }.resume()
-        return moviesCell
+        let seriesCell = collectionView.dequeueReusableCell(withReuseIdentifier: "movieCell", for: indexPath) as! MoviesCollectionViewCell
+        seriesCell.posterImage.backgroundColor = UIColor(red: 0.149, green: 0.157, blue: 0.184, alpha: 1)
+               seriesCell.posterImage.loadImageAsync(with: "https://image.tmdb.org/t/p/original" + seriesViewModel.seriesArray[0].results![indexPath.row].poster_path!, completed: {})
+        
+        return seriesCell
     }
+    
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+     //seriesViewModel.seriesArray[0].results![indexPath.row].id
+        seriesDetails.seriesID =  String( seriesViewModel.seriesArray[0].results![indexPath.row].id! )
+        
+        self.present(seriesDetails, animated: true, completion: nil)
+    }
+    
+    
+    
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         

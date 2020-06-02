@@ -35,7 +35,7 @@ class HomePageVC: UIViewController, WKUIDelegate, WKNavigationDelegate{
         todayLabel.snp.makeConstraints { (make) -> Void  in
             todayLabel.text = "Today"
             todayLabel.textColor = .white
-            todayLabel.font = todayLabel.font.withSize(30)
+            todayLabel.font = UIFont.boldSystemFont(ofSize: 30)
             make.height.equalTo(50)
             make.top.equalTo(container).offset(95)
             make.leading.equalTo(container).offset(10)
@@ -50,7 +50,7 @@ class HomePageVC: UIViewController, WKUIDelegate, WKNavigationDelegate{
         newTrendLabel.snp.makeConstraints { (make) -> Void  in
             newTrendLabel.text = "New and Trending"
             newTrendLabel.textColor = .lightGray
-            newTrendLabel.font = newTrendLabel.font.withSize(30)
+            newTrendLabel.font = UIFont.boldSystemFont(ofSize: 30)
             make.height.equalTo(40)
             make.top.equalTo(todayLabel.snp.bottom)
             make.leading.equalTo(container).offset(10)
