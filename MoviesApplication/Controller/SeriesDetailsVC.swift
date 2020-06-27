@@ -517,19 +517,33 @@ class SeriesDetailsVC: UIViewController {
         setCastLabel()
         setWatchButton()
     }
+    
+   func checkForNull(value:AnyObject) -> String
+    {
+        if(value as! NSObject == NSNull() || value as! String == "")
+        {
+           return " "
+        }
+        else
+        {
+            return value as! String
+        }
+    }
+
+
     func atamalarYapilacak(){
         
         
-        if (SDM[0].name == nil){
-           movieNameLabel.text  = "N/A"
+        
+        movieNameLabel.text = checkForNull(value: String(SDM[0].name!) as AnyObject)
+        
+        if ( SDM[0].first_air_date! == nil){
+            dateLabel.text = "Tarih bulunamadı. "
         }
         else{
-            movieNameLabel.text = String(SDM[0].name!)
+            dateLabel.text = SDM[0].first_air_date!.convertDatetring_TopreferredFormat(currentFormat: "yyyy-MM-dd", toFormat: "dd MMM yyyy")
         }
-//        if let seriesName = SDM[0].name {
-//                   movieNameLabel.text  = seriesName
-//               }
-      //  movieNameLabel.text = SDM[0].name
+        
         dateLabel.text = SDM[0].first_air_date!.convertDatetring_TopreferredFormat(currentFormat: "yyyy-MM-dd", toFormat: "dd MMM yyyy")
         self.voteAvarageCountLabel.text =  String(format: "%.1f", SDM[0].vote_average!)
         posterImage.loadImageAsync(with: "https://image.tmdb.org/t/p/original" + SDM[0].poster_path!, completed: {})

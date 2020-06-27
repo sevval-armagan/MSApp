@@ -325,16 +325,16 @@ class MovieDetailsVC: UIViewController{
     }
     
     func createStackViewButton (i:Int){
-        let button = UIButton()
+        let button = denemeButton()
         genresStackView.addArrangedSubview(button)
         button.snp.updateConstraints { (make) in
             make.height.equalTo(40)
         }
-        button.backgroundColor = UIColor(red: 0.149, green: 0.157, blue: 0.184, alpha: 1)
-        button.layer.cornerRadius = 15
-        button.contentEdgeInsets = UIEdgeInsets(top: 0, left: 15, bottom: 0, right: 15)
-        button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
-        button.setTitleColor(.lightGray, for: .normal)
+//        button.backgroundColor = UIColor(red: 0.149, green: 0.157, blue: 0.184, alpha: 1)
+//        button.layer.cornerRadius = 15
+//        button.contentEdgeInsets = UIEdgeInsets(top: 0, left: 15, bottom: 0, right: 15)
+//        button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
+//        button.setTitleColor(.lightGray, for: .normal)
         button.tag = i
         
         if(button.tag == i){
@@ -457,26 +457,26 @@ class MovieDetailsVC: UIViewController{
     
     //--------------------------------------------------------------------------------------------------//
     
-    let watchButton = UIButton()
+    let watchButton = denemeButton()
     func setWatchButton(){
         container.addSubview(watchButton)
-        watchButton.setTitleColor(.lightGray, for: .normal)
-        watchButton.layer.cornerRadius = 15
-        watchButton.contentEdgeInsets = UIEdgeInsets(top: 10, left: 15, bottom: 10, right: 15)
-        watchButton.backgroundColor = UIColor(red: 0.149, green: 0.157, blue: 0.184, alpha: 1)
-        watchButton.titleLabel!.font = UIFont.boldSystemFont(ofSize: 20)
-        watchButton.setTitle("Watched", for: .normal)
+//        watchButton.setTitleColor(.lightGray, for: .normal)
+//        watchButton.layer.cornerRadius = 15
+//        watchButton.contentEdgeInsets = UIEdgeInsets(top: 10, left: 15, bottom: 10, right: 15)
+//        watchButton.backgroundColor = UIColor(red: 0.149, green: 0.157, blue: 0.184, alpha: 1)
+//        watchButton.titleLabel!.font = UIFont.boldSystemFont(ofSize: 20)
+//        watchButton.setTitle("Watched", for: .normal)
         watchButton.snp.makeConstraints { (make) in
             make.top.equalTo(runTimeCountLabel)
             make.trailing.equalTo(posterImage.snp_trailingMargin)
             make.bottom.equalTo(runTimeLabel.snp_bottomMargin)
             make.width.equalTo(120)
-            make.height.equalTo(30)
+            make.height.equalTo(40)
         }
         watchButton.addTarget(self, action: #selector( watchButtonAction), for: .touchUpInside)
     }
     
-    @objc func watchButtonAction(sender: UIButton!) {
+    @objc func watchButtonAction(sender: denemeButton!) {
         print("Button tapped")
     }
     
@@ -503,6 +503,17 @@ class MovieDetailsVC: UIViewController{
         setCastLabel()
         setWatchButton()
     }
+    func checkForNull(value:AnyObject) -> String
+    {
+        if(value as! NSObject == NSNull() || value as! String == "" )
+        {
+           return " "
+        }
+        else
+        {
+            return value as! String
+        }
+    }
     func atamalarYapilacak(){
         movieNameLabel.text = MDM[0].title
         dateLabel.text = MDM[0].release_date!.convertDatetring_TopreferredFormat(currentFormat: "yyyy-MM-dd", toFormat: "dd MMM yyyy")
@@ -513,7 +524,8 @@ class MovieDetailsVC: UIViewController{
             SynopsisTextLabel.text = asdas3d
         }
         
-        trailerKey = String(TRM[0].results![0].key ??  "" )
+        
+       // trailerKey = checkForNull(value: TRM[0] as AnyObject)
         if (MDM[0].runtime == nil){
             self.runTimeLabel.text = "N/A"
         }

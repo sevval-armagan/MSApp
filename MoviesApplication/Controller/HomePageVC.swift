@@ -117,9 +117,19 @@ class HomePageVC: UIViewController, WKUIDelegate, WKNavigationDelegate{
             let offset = (layout.scrollDirection == .vertical) ? scrollView.contentOffset.x : scrollView.contentOffset.y
             currentPage = Int(floor(offset - pageSide / 2) / pageSide + 1)
         }
+
+        
+        let searchButton = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(searchButtonTapped))
+        searchButton.tintColor = .white
+        self.navigationItem.rightBarButtonItem = searchButton
     }
     
-    
+      var searchBttnVC = SearchButtonVC()
+      @objc func searchButtonTapped(sender: UIBarButtonItem!) {
+             print("Search Button tapped")
+        self.present(searchBttnVC, animated: true, completion: nil)
+         }
+      
     
     fileprivate var currentPage: Int = 0 {
         didSet{

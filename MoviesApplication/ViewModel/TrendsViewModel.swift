@@ -26,6 +26,9 @@ protocol MoviesCastViewModelDelegate{
 protocol SeriesCastViewModelDelegate{
     func requestCompleted()
 }
+protocol UpcomingMoviesViewModelDelegate{
+func requestCompleted()
+}
 //-----------------------------------------//
 class TrendsViewModel{
     var array = [TrendsModel]()
@@ -55,6 +58,16 @@ class SeriesCastViewModel{
     var delegate: MoviesCastViewModelDelegate?
 }
 
+class UpcomingMoviesViewModel{
+    var array = [UpcomingMoviesModel]()
+    var delegate: UpcomingMoviesViewModelDelegate?
+}
+
+// -----------------------------------------------------//
+enum SeriesArrayEmpty : Error {
+    
+}
+
 extension TrendsViewModel{
     func getData(){
         
@@ -68,8 +81,6 @@ extension TrendsViewModel{
             array.append(json!)
         }
         self.delegate?.requestCompleted()
-        
-        
         
     }
 }
@@ -119,6 +130,27 @@ extension MoviesCastViewModel{
         
     }
 }
+
+
+
+
+extension UpcomingMoviesViewModel{
+    func getData(){
+        
+        var request = URLRequest(url: URL(string: "https://api.themoviedb.org/3/movie/upcoming?api_key=1218591a465b03f80cfebb0ef37a2275&language=en-US&page=1")!)
+        request.httpMethod = "GET"
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        let data = try? Data(contentsOf: request.url!)
+        
+        do {
+            let json = try? JSONDecoder().decode(UpcomingMoviesModel.self, from: data!)
+            array.append(json!)
+        }
+        self.delegate?.requestCompleted()
+        
+    }
+}
+
 
 
 

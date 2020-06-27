@@ -15,6 +15,8 @@ class TabBarController: UITabBarController {
     private let myCollectionVC = MyCollectionVC()
     private let segmentedVC = SegmentedControllerVC()
     
+ 
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -24,7 +26,12 @@ class TabBarController: UITabBarController {
         viewControllers = [   createTabBarController(title: "Home", imageName: "HomePage", vc: moviesVC),
                               createTabBarController(title: "Movies ", imageName: "Movies", vc: segmentedVC),
                               createTabBarController(title: "My Collection", imageName: "Collection", vc: myCollectionVC)]
+        
+        
+  
     }
+    
+  
     
     private func createTabBarController(title: String, imageName: String, vc: UIViewController) -> UINavigationController{
         let recentVC = UINavigationController(rootViewController: vc)
